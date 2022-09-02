@@ -1,0 +1,27 @@
+- name: Ansible Homework
+  hosts: all
+
+  tasks:
+    - name: Add Nodejs repo key
+      become: true
+      ansible.builtin.apt_key:
+        keyserver: https://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x1655A0AB68576280
+        id: '68576280'
+
+    - name: Add Nodejs repo
+      become: true
+      ansible.builtin.apt_repository:
+        repo: deb https://deb.nodesource.com/node_16.x focal main
+        filename: nodesource
+        state: present
+
+    - name: Install Nodejs
+      become: true
+      ansible.builtin.apt:
+        name: nodejs
+        state: present
+
+    - name: Init Fastify
+      ansible.builtin.command:
+        cmd: npm init -y fastify
+        creates: package.json
